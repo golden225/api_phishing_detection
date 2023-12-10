@@ -1,7 +1,6 @@
 import streamlit as st
 import pickle
-import nltk
-nltk.download('punkt')
+
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 from wordcloud import STOPWORDS
