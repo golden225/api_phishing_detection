@@ -1,7 +1,6 @@
 import streamlit as st
 import pickle
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 from wordcloud import STOPWORDS
@@ -10,7 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 stemmer = SnowballStemmer("english")
 
-app = FastAPI() 
+
 
 pickle_in = open("Regression_logistic_model.pkl", "rb")
 model = pickle.load(pickle_in)
@@ -25,11 +24,7 @@ def remove_stopwords(text):
 vect_in = open("vectorizer.pkl","rb")
 vectorizer = pickle.load(vect_in)
 
-@app.get("/home")
-def home():
-    return {"message": "Hello sur mon api de fishing detection"}
 
-@app.post("/prediction_lien")
 def prediction_lien(lien: str):
     try:   
         doc_no_stop_word = remove_stopwords(' '.join([stemmer.stem(word) for word in word_tokenize(lien)]))
@@ -42,7 +37,7 @@ def prediction_lien(lien: str):
             return {"message": "Ce lien est légitime, ne vous inquiétez pas."}
         
     except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
+        return "erreur ❗️"
 
 st.title("DETECTEUR DE LIEN PHISHING ")
 
@@ -57,9 +52,9 @@ if st.button("Vérifier le lien"):
         data = prediction_lien(upload)
 
         if data == {"message": "Ce lien est un phishing."}:
-            message = "Ce lien est un phishing"
+            message = "Ce lien est un phishing 😰"
         elif data ==  {"message": "Ce lien est légitime, ne vous inquiétez pas."} :
-            message =  "Ce lien est légitime, ne vous inquiétez pas."
+            message =  "Ce lien est légitime, ne vous inquiétez pas 😎"
 
 
 st.write(message)
